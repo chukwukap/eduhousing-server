@@ -19,10 +19,10 @@ export const config = {
       "postgresql://postgres:postgres@localhost:5432/UNNHousing",
   },
   email: {
-    from: process.env.EMAIL_FROM || "noreply@unihousing.com",
+    from: process.env.EMAIL_FROM || "noreply@eduhousing.com",
 
     smtp: {
-      host: process.env.SMTP_HOST || "smtp.example.com",
+      host: process.env.SMTP_HOST || "gmail.com",
       port: process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT, 10) : 587,
       secure: process.env.SMTP_SECURE === "true",
       user: process.env.SMTP_USER,
@@ -30,7 +30,7 @@ export const config = {
     },
   },
   jwt: {
-    secret: process.env.JWT_SECRET || "your-secret-key",
+    secret: process.env.JWT_SECRET || "",
     expiresIn: process.env.JWT_EXPIRES_IN || "1d",
   },
 };
