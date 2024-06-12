@@ -36,7 +36,7 @@ export const isPropertyOwner = (
   next();
 };
 
-export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
+export const isAdmin = (req: Request, _: Response, next: NextFunction) => {
   const { role } = req.user! as User;
 
   if (role !== UserRole.ADMIN) {
