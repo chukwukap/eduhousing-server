@@ -10,6 +10,7 @@ const JWT_SECRET = process.env.JWT_SECRET!;
  * @param expiresIn - The expiration time for the JWT (e.g., '1h', '7d').
  * @returns The generated JWT token.
  */
+
 export function generateToken(payload: JwtPayload, expiresIn: string): string {
   return jwt.sign(payload, JWT_SECRET, { expiresIn });
 }
