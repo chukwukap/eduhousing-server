@@ -1,0 +1,109 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  STUDENT
+  PROPERTY_OWNER
+  ADMIN
+}
+
+enum PropertyType {
+  APARTMENT
+  HOUSE
+  HOSTEL
+  OTHER
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELED
+}
+
+model User {
+  id                String     @id @default(auto()) @map("_id") @db.ObjectId
+  // id                String     @id @default(cuid()) @map("_id") @db.ObjectId
+  firstName         String
+  lastName          String
+  verified          Boolean
+  email             String     @unique
+  password          String
+  profilePicture    String?
+  role              UserRole
+  passwordChangedAt DateTime?
+  properties        Property[]
+  bookings          Booking[]
+  reviews           Review[]
+
+  @@map("users")
+}
+
+model Property {
+  id            String       @id @default(uuid()) @map("_id") @db.ObjectId
+  title         String
+  description   String
+  type          PropertyType
+  location      Json
+  bedrooms      Int
+  bathrooms     Int
+  amenities     String[]
+  images        String[]
+  rent          Float
+  deposit       Float
+  owner         User         @relation(fields: [ownerId], references: [id])
+  ownerId       String       @db.ObjectId
+  university    String
+  availableFrom DateTime     @db.Date
+  availableTo   DateTime     @db.Date
+  bookings      Booking[]
+  reviews       Review[]
+
+  @@map("properties")
+}
+
+model Booking {
+  id             String        @id @default(uuid()) @map("_id") @db.ObjectId
+  property       Property      @relation(fields: [propertyId], references: [id])
+  propertyId     String        @db.ObjectId
+  tenant         User          @relation(fields: [tenantId], references: [id])
+  tenantId       String        @db.ObjectId
+  checkInDate    DateTime      @db.Date
+  checkOutDate   DateTime      @db.Date
+  totalRent      Float
+  status         BookingStatus
+  paymentDetails Json
+
+  @@map("bookings")
+}
+
+model Review {
+  id         String   @id @default(uuid()) @map("_id") @db.ObjectId
+  property   Property @relation(fields: [propertyId], references: [id])
+  propertyId String   @db.ObjectId
+  author     User     @relation(fields: [authorId], references: [id])
+  authorId   String   @db.ObjectId
+  rating     Int
+  comment    String
+
+  @@map("reviews")
+}
+
+model University {
+  id       String @id @default(uuid()) @map("_id") @db.ObjectId
+  name     String @unique
+  location Json
+
+  @@map("universities")
+}
