@@ -21,17 +21,24 @@ const createAuthController = () => {
         const { firstName, lastName, email, password, university } = req.body;
         // Validate input
         if (!email || !password || !firstName || !lastName || !university) {
-          throw new ValidationError("Please provide all required fields.");
+          res.status(400).json({
+            error: false,
+            message: "missing required fields",
+          });
         }
 
-        // dev purpose
-        await prisma.user.deleteMany();
+        // dev purpose only
+        // await prisma.user.deleteMany();
 
         // Check if the user already exists
         const existingUser = await userService.getUserByEmail(email);
         if (existingUser) {
           throw new ValidationError("User with this email already exists.");
         }
+
+        console.log(
+          "_________________--creating user--________________________"
+        );
 
         // Create a new user
         const user = await authService.registerUser(

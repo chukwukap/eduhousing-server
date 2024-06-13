@@ -5,7 +5,8 @@ import helmet from "helmet";
 import compression from "compression";
 import cors from "cors";
 import rateLimit from "express-rate-limit";
-import authRoutes from "./routes/auth.routes";
+import { authRoutes, propertyRoutes } from "./routes/";
+import {} from "./routes/";
 
 import { config } from "./config/";
 
@@ -28,6 +29,7 @@ app.use(rateLimiter);
 
 // Routes
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/properties", propertyRoutes);
 
 app.use("/api/v1/", (_, res: Response) => {
   res.json({ message: "hello world" });

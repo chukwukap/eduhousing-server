@@ -42,4 +42,4 @@ router.delete(
   userController.deleteUser
 );
 
-export default router;
+export { router };

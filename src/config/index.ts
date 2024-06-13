@@ -14,7 +14,7 @@ export const config = {
     baseUrl: process.env.APP_BASE_URL || "http://localhost:3000",
   },
   database: {
-    url: process.env.DATABASE_URL || "",
+    // url: process.env.DATABASE_UR || "mongodb://localhost:27017/uniHousing",
   },
   email: {
     from: process.env.EMAIL_FROM || "noreply@uniHousing.com",
