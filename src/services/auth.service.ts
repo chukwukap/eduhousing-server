@@ -26,7 +26,7 @@ const createAuthService = () => {
       password: string,
       firstName: string,
       lastName: string,
-      _: string
+      university: string
     ): Promise<User> {
       // Hash the password
       const hashedPassword = await hashPassword(password);
@@ -37,9 +37,10 @@ const createAuthService = () => {
           email,
           password: hashedPassword,
           firstName,
-          role: UserRole.PROPERTY_OWNER,
+          roles: [UserRole.PROPERTY_OWNER],
           lastName,
-          verified: false, // Set verified to false initially
+          university: university,
+          verified: false,
         },
       });
 

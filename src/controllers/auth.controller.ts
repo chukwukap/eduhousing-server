@@ -21,7 +21,7 @@ const createAuthController = () => {
         const { firstName, lastName, email, password, university } = req.body;
         // Validate input
         if (!email || !password || !firstName || !lastName || !university) {
-          res.status(400).json({
+          return res.status(400).json({
             error: false,
             message: "missing required fields",
           });
@@ -33,7 +33,9 @@ const createAuthController = () => {
         // Check if the user already exists
         const existingUser = await userService.getUserByEmail(email);
         if (existingUser) {
-          throw new ValidationError("User with this email already exists.");
+          return res.status(201).json({
+            message: `user with email: ${email} already existss`,
+          });
         }
 
         console.log(
@@ -50,18 +52,22 @@ const createAuthController = () => {
         );
 
         // Generate a verification token
-        const verificationToken = generateToken({ userId: user.id }, "1h");
+        if (user) {
+          const verificationToken = generateToken({ userId: user.id }, "1h");
 
-        // Send a verification email
-        await sendVerificationEmail(email, {
-          text: "how are you?",
-        });
+          // Send a verification email
+          await sendVerificationEmail(email, {
+            subject: "Verify your email",
 
-        res.status(201).json({
-          user,
-          message:
-            "User registered successfully. Please check your email to verify your account.",
-        });
+            text: `Hello, please verify your email by clicking the following link: ${process.env.BASE_URL}/verify-email?token=${verificationToken}`,
+          });
+
+          res.status(201).json({
+            user,
+            message:
+              "User registered successfully. Please check your email to verify your account.",
+          });
+        }
       } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
           // Handle Prisma-specific errors here

@@ -12,6 +12,7 @@ export interface EmailVerificationPayload {
  * Represents additional options for a verification email.
  */
 export interface VerificationEmailOptions {
+  subject: string;
   text?: string;
   attachments?: Attachment[];
   // Add any other options specific to your application

@@ -7,6 +7,7 @@ import cors from "cors";
 import rateLimit from "express-rate-limit";
 import {
   authRoutes,
+  bookingRoutes,
   propertyRoutes,
   reviewRoutes,
   userRoutes,
@@ -38,6 +39,7 @@ app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/properties", propertyRoutes);
 app.use("/api/v1/universities", universityRoutes);
 app.use("/api/v1/reviews", reviewRoutes);
+app.use("/api/v1/bookings", bookingRoutes);
 
 app.use("/api/v1/", (_, res: Response) => {
   res.json({ message: "hello world" });

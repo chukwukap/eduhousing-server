@@ -38,10 +38,11 @@ model User {
   firstName         String
   lastName          String
   verified          Boolean
+  university        String
   email             String     @unique
   password          String
   profilePicture    String?
-  role              UserRole
+  roles             UserRole[]
   passwordChangedAt DateTime?
   properties        Property[]
   bookings          Booking[]
