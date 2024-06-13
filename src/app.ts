@@ -5,6 +5,7 @@ import helmet from "helmet";
 import compression from "compression";
 import cors from "cors";
 import rateLimit from "express-rate-limit";
+import authRoutes from "./routes/auth.routes";
 
 import { config } from "./config/";
 
@@ -21,12 +22,14 @@ app.use(express.urlencoded({ extended: true }));
 // Rate limiting
 const rateLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per windowMs
+  max: 150, // Limit each IP to 100 requests per windowMs
 });
 app.use(rateLimiter);
 
 // Routes
-app.use("/api/v1", (_, res: Response) => {
+app.use("/api/v1/auth", authRoutes);
+
+app.use("/api/v1/", (_, res: Response) => {
   res.json({ message: "hello world" });
 });
 
@@ -35,7 +38,6 @@ app.get("/health", (_req: Request, res: Response) => {
   res.status(200).json({ message: "OK" });
 });
 
-// Start the server
 const port = config.app.port;
 
 app.listen(port, () => {

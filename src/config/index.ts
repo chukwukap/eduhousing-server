@@ -14,15 +14,13 @@ export const config = {
     baseUrl: process.env.APP_BASE_URL || "http://localhost:3000",
   },
   database: {
-    url:
-      process.env.DATABASE_URL ||
-      "postgresql://postgres:postgres@localhost:5432/UNNHousing",
+    url: process.env.DATABASE_URL || "",
   },
   email: {
-    from: process.env.EMAIL_FROM || "noreply@eduhousing.com",
+    from: process.env.EMAIL_FROM || "noreply@uniHousing.com",
 
     smtp: {
-      host: process.env.SMTP_HOST || "gmail.com",
+      host: process.env.SMTP_HOST || "uniHousing@gmail.com",
       port: process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT, 10) : 587,
       secure: process.env.SMTP_SECURE === "true",
       user: process.env.SMTP_USER,

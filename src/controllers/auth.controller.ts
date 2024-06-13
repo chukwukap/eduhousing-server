@@ -1,9 +1,9 @@
 import { Request, Response } from "express-serve-static-core";
 import { authService } from "../services/auth.service";
-import { CustomError, UnauthorizedError, ValidationError } from "../utils/";
-import { Prisma, User } from "@prisma/client";
+import { ValidationError } from "../utils/";
+import { Prisma } from "@prisma/client";
 import { NextFunction } from "express-serve-static-core";
-import { userService } from "../services/user.service";
+import { userService } from "../services/";
 import { generateToken } from "../utils/jwt.utils";
 import { sendPasswordResetEmail, sendVerificationEmail } from "../utils/";
 import prisma from "../config/database";
@@ -19,12 +19,12 @@ const createAuthController = () => {
     registerUser: async (req: Request, res: Response, next: NextFunction) => {
       try {
         const { firstName, lastName, email, password, university } = req.body;
-        console.log({ firstName, lastName, email, password, university });
         // Validate input
         if (!email || !password || !firstName || !lastName || !university) {
           throw new ValidationError("Please provide all required fields.");
         }
 
+        // dev purpose
         await prisma.user.deleteMany();
 
         // Check if the user already exists
@@ -44,7 +44,6 @@ const createAuthController = () => {
 
         // Generate a verification token
         const verificationToken = generateToken({ userId: user.id }, "1h");
-        console.log(verificationToken);
 
         // Send a verification email
         await sendVerificationEmail(email, {
@@ -65,7 +64,7 @@ const createAuthController = () => {
               .json({ error: "Unique constraint violation" });
           }
         }
-        next(error);
+        return next(error);
       }
     },
 
@@ -102,7 +101,7 @@ const createAuthController = () => {
      * @param res - The Express response object.
      * @param next - The Express next middleware function.
      */
-    logoutUser: async (req: Request, res: Response, next: NextFunction) => {
+    logoutUser: async (_: Request, res: Response, next: NextFunction) => {
       try {
         // Implement any necessary logout logic here, such as invalidating the access token
         res.status(200).json({ message: "User logged out successfully." });
@@ -137,7 +136,7 @@ const createAuthController = () => {
         }
 
         // Generate a password reset token
-        const resetToken = generateToken({ userId: user.id }, "1h");
+        // const resetToken = generateToken({ userId: user.id }, "1h");
 
         // Send a password reset email
         await sendPasswordResetEmail(email, {});

@@ -18,15 +18,16 @@ const createAuthService = () => {
      * @param password - The user's password.
      * @param firstName - The user's first name.
      * @param lastName - The user's last name.
+     * @param university - The user's university.
      * @returns The created user object.
      */
-    registerUser: async (
+    async registerUser(
       email: string,
       password: string,
       firstName: string,
       lastName: string,
-      university: string
-    ): Promise<User> => {
+      _: string
+    ): Promise<User> {
       // Hash the password
       const hashedPassword = await hashPassword(password);
 
@@ -51,7 +52,7 @@ const createAuthService = () => {
      * @param password - The user's password.
      * @returns The authenticated user object.
      */
-    loginUser: async (email: string, password: string): Promise<User> => {
+    async loginUser(email: string, password: string): Promise<User> {
       // Find the user by email
       const user = await prisma.user.findUnique({ where: { email } });
       if (!user) {
@@ -79,10 +80,7 @@ const createAuthService = () => {
      * @param token - The password reset token.
      * @param newPassword - The new password.
      */
-    resetPassword: async (
-      token: string,
-      newPassword: string
-    ): Promise<void> => {
+    async resetPassword(token: string, newPassword: string): Promise<void> {
       // Verify the token and extract the user ID
       const { userId } = verifyToken(token);
 
@@ -106,7 +104,7 @@ const createAuthService = () => {
      * Verify a user's email address.
      * @param token - The email verification token.
      */
-    verifyEmail: async (token: string): Promise<void> => {
+    async verifyEmail(token: string): Promise<void> {
       // Verify the token and extract the user ID
       const { userId } = verifyToken(token);
 
