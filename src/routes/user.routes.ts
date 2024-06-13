@@ -2,16 +2,16 @@ import express from "express";
 import { userController } from "../controllers/user.controller";
 import { authenticate, roleMiddleware } from "../middlewares";
 
-const router = express.Router();
+const userRoutes = express.Router();
 
 // Get the authenticated user's profile
-router.get("/profile", authenticate, userController.getUserProfile);
+userRoutes.get("/profile", authenticate, userController.getUserProfile);
 
 // Update the authenticated user's profile
-router.put("/profile", authenticate, userController.updateUserProfile);
+userRoutes.put("/profile", authenticate, userController.updateUserProfile);
 
 // List all users (requires authentication and appropriate role)
-router.get(
+userRoutes.get(
   "/",
   authenticate,
   roleMiddleware(["admin"]),
@@ -19,7 +19,7 @@ router.get(
 );
 
 // Get a specific user (requires authentication and appropriate role)
-router.get(
+userRoutes.get(
   "/:userId",
   authenticate,
   roleMiddleware(["admin"]),
@@ -27,7 +27,7 @@ router.get(
 );
 
 // Update a user (requires authentication and appropriate role)
-router.put(
+userRoutes.put(
   "/:userId",
   authenticate,
   roleMiddleware(["admin"]),
@@ -35,11 +35,11 @@ router.put(
 );
 
 // Delete a user (requires authentication and appropriate role)
-router.delete(
+userRoutes.delete(
   "/:userId",
   authenticate,
   roleMiddleware(["admin"]),
   userController.deleteUser
 );
 
-export { router };
+export { userRoutes };
