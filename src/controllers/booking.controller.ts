@@ -75,11 +75,11 @@ const createBookingController = () => {
           return res.status(401).json({ error: "Unauthorized" });
         }
         const bookings = await bookingService.getBookingsByTenant(tenantId);
-        res.status(200).json({ bookings });
+        return res.status(200).json({ bookings });
       } catch (error) {
         next(error);
 
-        res.status(400).json({ error: "Error fetching bookings" });
+        return res.status(400).json({ error: "Error fetching bookings" });
       }
     },
 

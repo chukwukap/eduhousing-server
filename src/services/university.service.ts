@@ -4,17 +4,11 @@ import prisma from "../config/database";
 
 const createUniversityService = () => {
   const addUniversity = async (
-    role: string,
     name: string,
     location: { type: "Point"; coordinates: [number, number] },
     description?: string,
     website?: string
   ): Promise<University> => {
-    if (role !== "ADMIN") {
-      throw new UnauthorizedError(
-        "You are not authorized to create a university"
-      );
-    }
     const existingUniversity = await prisma.university.findUnique({
       where: { name },
     });
@@ -49,14 +43,8 @@ const createUniversityService = () => {
 
   const updateUniversity = async (
     university: Partial<University>,
-    role: string,
     universityId: string
   ): Promise<University> => {
-    if (role !== "ADMIN") {
-      throw new UnauthorizedError(
-        "You are not authorized to update a university"
-      );
-    }
     const existingUniversity = await prisma.university.findUnique({
       where: { id: universityId },
     });
@@ -74,14 +62,8 @@ const createUniversityService = () => {
   };
 
   const deleteUniversity = async (
-    universityId: string,
-    role: string
+    universityId: string
   ): Promise<University> => {
-    if (role !== "ADMIN") {
-      throw new UnauthorizedError(
-        "You are not authorized to delete a university"
-      );
-    }
     const existingUniversity = await prisma.university.findUnique({
       where: { id: universityId },
     });

@@ -24,10 +24,10 @@ export const isPropertyOwner = (
   _: Response,
   next: NextFunction
 ) => {
-  const { role, id } = req.user! as User;
+  const { roles, id } = req.user as User;
   const propertyOwnerId = req.params.ownerId;
 
-  if (role !== UserRole.PROPERTY_OWNER || id !== propertyOwnerId) {
+  if (!roles.includes(UserRole.PROPERTY_OWNER) || id !== propertyOwnerId) {
     return next(
       new UnauthorizedError("You are not authorized to perform this action")
     );
@@ -37,9 +37,9 @@ export const isPropertyOwner = (
 };
 
 export const isAdmin = (req: Request, _: Response, next: NextFunction) => {
-  const { role } = req.user! as User;
+  const { roles } = req.user! as User;
 
-  if (role !== UserRole.ADMIN) {
+  if (!roles.includes(UserRole.ADMIN)) {
     return next(
       new UnauthorizedError("You are not authorized to perform this action")
     );

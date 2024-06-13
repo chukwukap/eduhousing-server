@@ -1,13 +1,13 @@
 import { Request, Response } from "express-serve-static-core";
 import { propertyService } from "../services/";
-import { Property } from "@prisma/client";
+import { Property, User } from "@prisma/client";
 import { CustomError, NotFoundError, UnauthorizedError } from "../utils/";
 
 const createPropertyController = () => {
   return {
     createProperty: async (req: Request, res: Response) => {
       try {
-        const ownerId = req.user!.id; // Assuming authenticated user is available
+        const ownerId = (req.user as User as User)!.id; // Assuming authenticated user is available
         const {
           id,
           title,
@@ -90,7 +90,7 @@ const createPropertyController = () => {
     updateProperty: async (req: Request, res: Response) => {
       try {
         const propertyId = req.params.id;
-        const ownerId = req.user!.id;
+        const ownerId = (req.user as User)!.id;
         const property = req.body;
         const updatedProperty = await propertyService.UpdateProperty(
           property,
@@ -113,7 +113,7 @@ const createPropertyController = () => {
     deleteProperty: async (req: Request, res: Response) => {
       try {
         const propertyId = req.params.id;
-        const ownerId = req.user!.id;
+        const ownerId = (req.user as User)!.id;
         const deletedProperty = await propertyService.deleteProperty(
           propertyId,
           ownerId

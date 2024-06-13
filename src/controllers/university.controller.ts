@@ -8,9 +8,8 @@ const createUniversityController = () => {
     addUniversity: async (req: Request, res: Response) => {
       try {
         const { name, location, description, website } = req.body;
-        const { role } = (req.user as User as User)!;
+        const { roles } = (req.user as User)!;
         const newUniversity = await universityService.addUniversity(
-          role,
           name,
           location,
           description,
@@ -53,10 +52,9 @@ const createUniversityController = () => {
       try {
         const universityId = req.params.id;
         const { name, location } = req.body;
-        const { role } = (req.user as User)!;
+        const { roles } = (req.user as User)!;
         const updatedUniversity = universityService.updateUniversity(
           { name, location },
-          role,
           universityId
         );
         res.status(200).json({ university: updatedUniversity });
@@ -75,11 +73,9 @@ const createUniversityController = () => {
     deleteUniversity: async (req: Request, res: Response) => {
       try {
         const universityId = req.params.id;
-        const { role } = (req.user as User)!;
-        const deletedUniversity = universityService.deleteUniversity(
-          universityId,
-          role
-        );
+        const { roles } = (req.user as User)!;
+        const deletedUniversity =
+          universityService.deleteUniversity(universityId);
         res.status(200).json({ message: "University deleted successfully" });
       } catch (error) {
         if (
