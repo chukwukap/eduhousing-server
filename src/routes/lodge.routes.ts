@@ -1,7 +1,8 @@
 import express from "express";
-import { propertyController } from "../controllers/";
+import { propertyController } from "../controllers";
 import { authenticate } from "../middlewares/auth.middleware";
-import { roleMiddleware } from "../middlewares/";
+import { roleMiddleware } from "../middlewares";
+import { uploadImages } from "src/middlewares/upload.middleware";
 
 const propertyRoutes = express.Router();
 
@@ -16,6 +17,7 @@ propertyRoutes.post(
   "/",
   authenticate,
   roleMiddleware(["ADMIN", "LANDLORD"]),
+  uploadImages,
   propertyController.createProperty
 );
 

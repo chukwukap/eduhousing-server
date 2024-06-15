@@ -15,11 +15,11 @@ datasource db {
 
 enum UserRole {
   STUDENT
-  PROPERTY_OWNER
+  Lodge_OWNER
   ADMIN
 }
 
-enum PropertyType {
+enum LodgeType {
   APARTMENT
   HOUSE
   HOSTEL
@@ -44,18 +44,18 @@ model User {
   profilePicture    String?
   roles             UserRole[]
   passwordChangedAt DateTime?
-  properties        Property[]
+  lodges            Lodge[]
   bookings          Booking[]
   reviews           Review[]
 
   @@map("users")
 }
 
-model Property {
-  id            String       @id @default(uuid()) @map("_id") @db.ObjectId
+model Lodge {
+  id            String    @id @default(uuid()) @map("_id") @db.ObjectId
   title         String
   description   String
-  type          PropertyType
+  type          LodgeType
   location      Json
   bedrooms      Int
   bathrooms     Int
@@ -63,21 +63,21 @@ model Property {
   images        String[]
   rent          Float
   deposit       Float
-  owner         User         @relation(fields: [ownerId], references: [id])
-  ownerId       String       @db.ObjectId
+  owner         User      @relation(fields: [ownerId], references: [id])
+  ownerId       String    @db.ObjectId
   university    String
-  availableFrom DateTime     @db.Date
-  availableTo   DateTime     @db.Date
+  availableFrom DateTime  @db.Date
+  availableTo   DateTime  @db.Date
   bookings      Booking[]
   reviews       Review[]
 
-  @@map("properties")
+  @@map("lodges")
 }
 
 model Booking {
   id             String        @id @default(uuid()) @map("_id") @db.ObjectId
-  property       Property      @relation(fields: [propertyId], references: [id])
-  propertyId     String        @db.ObjectId
+  Lodge          Lodge         @relation(fields: [LodgeId], references: [id])
+  LodgeId        String        @db.ObjectId
   tenant         User          @relation(fields: [tenantId], references: [id])
   tenantId       String        @db.ObjectId
   checkInDate    DateTime      @db.Date
@@ -90,13 +90,13 @@ model Booking {
 }
 
 model Review {
-  id         String   @id @default(uuid()) @map("_id") @db.ObjectId
-  property   Property @relation(fields: [propertyId], references: [id])
-  propertyId String   @db.ObjectId
-  author     User     @relation(fields: [authorId], references: [id])
-  authorId   String   @db.ObjectId
-  rating     Int
-  comment    String
+  id       String @id @default(uuid()) @map("_id") @db.ObjectId
+  Lodge    Lodge  @relation(fields: [LodgeId], references: [id])
+  LodgeId  String @db.ObjectId
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId String @db.ObjectId
+  rating   Int
+  comment  String
 
   @@map("reviews")
 }
