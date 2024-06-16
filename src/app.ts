@@ -50,8 +50,10 @@ app.get("/health", (_req: Request, res: Response) => {
   res.status(200).json({ message: "OK" });
 });
 
-const port = config.app.port;
+// const port = config.app.port;
+const port = 3001;
 
+console.log(port);
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
