@@ -18,6 +18,7 @@ import {
 
 import { config } from "./config/";
 import { universityRoutes } from "./routes/university.routes";
+import { corsOptions } from "./config/cors";
 
 const app: Application = express();
 
@@ -25,7 +26,7 @@ const app: Application = express();
 app.use(morgan("dev"));
 app.use(helmet());
 app.use(compression());
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -53,8 +54,8 @@ app.get("/health", (_req: Request, res: Response) => {
   res.status(200).json({ message: "OK" });
 });
 
-// const port = config.app.port;
-const port = 3001;
+const port = config.app.port;
+// const port = 3001;
 
 console.log(port);
 app.listen(port, () => {
