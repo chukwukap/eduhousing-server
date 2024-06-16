@@ -5,6 +5,9 @@ import helmet from "helmet";
 import compression from "compression";
 import cors from "cors";
 import rateLimit from "express-rate-limit";
+// import { config as dotEnvConfig } from "dotenv";
+// dotEnvConfig();
+
 import {
   authRoutes,
   bookingRoutes,
