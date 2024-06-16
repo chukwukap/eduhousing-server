@@ -93,7 +93,7 @@ const createAuthController = () => {
 
         // Validate input
         if (!email || !password) {
-          throw new ValidationError("Please provide email and password.");
+          return res.json({ message: "Please provide email and password." });
         }
 
         // Check if the user exists and credentials are valid
@@ -102,7 +102,7 @@ const createAuthController = () => {
         // Generate an access token
         const accessToken = generateToken({ userId: user.id }, "1h");
 
-        res.status(200).json({ accessToken });
+        return res.status(200).json({ accessToken });
       } catch (error) {
         next(error);
       }

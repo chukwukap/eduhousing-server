@@ -1,40 +1,39 @@
 import express from "express";
-import { propertyController } from "../controllers";
+import { lodgeController } from "../controllers";
 import { authenticate } from "../middlewares/auth.middleware";
-import { roleMiddleware } from "../middlewares";
-import { uploadImages } from "src/middlewares/upload.middleware";
+import { roleMiddleware, uploadImages } from "../middlewares";
 
-const propertyRoutes = express.Router();
+const lodgeRoutes = express.Router();
 
-// List all properties
-propertyRoutes.get("/", propertyController.listProperties);
+// List all lodges
+lodgeRoutes.get("/", lodgeController.listProperties);
 
-// Get a specific property
-propertyRoutes.get("/:propertyId", propertyController.getPropertyById);
+// Get a specific lodge
+lodgeRoutes.get("/:lodgeId", lodgeController.getLodgeById);
 
-// Create a new property (requires authentication and appropriate role)
-propertyRoutes.post(
+// Create a new lodge (requires authentication and appropriate role)
+lodgeRoutes.post(
   "/",
   authenticate,
   roleMiddleware(["ADMIN", "LANDLORD"]),
   uploadImages,
-  propertyController.createProperty
+  lodgeController.createLodge
 );
 
-// Update a property (requires authentication and appropriate role)
-propertyRoutes.put(
-  "/:propertyId",
+// Update a lodge (requires authentication and appropriate role)
+lodgeRoutes.put(
+  "/:lodgeId",
   authenticate,
   roleMiddleware(["ADMIN", "LANDLORD"]),
-  propertyController.updateProperty
+  lodgeController.updateLodge
 );
 
-// Delete a property (requires authentication and appropriate role)
-propertyRoutes.delete(
-  "/:propertyId",
+// Delete a lodge (requires authentication and appropriate role)
+lodgeRoutes.delete(
+  "/:lodgeId",
   authenticate,
   roleMiddleware(["ADMIN", "LANDLORD"]),
-  propertyController.deleteProperty
+  lodgeController.deleteLodge
 );
 
-export { propertyRoutes };
+export { lodgeRoutes };

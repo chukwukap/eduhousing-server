@@ -1,11 +1,11 @@
 import { Request, Response } from "express-serve-static-core";
-import { propertyService } from "../services/";
-import { Property, User } from "@prisma/client";
-import { CustomError, NotFoundError, UnauthorizedError } from "../utils/";
+import { lodgeService } from "../services";
+import { Lodge, User } from "@prisma/client";
+import { CustomError, NotFoundError, UnauthorizedError } from "../utils";
 
-const createPropertyController = () => {
+const createLodgeController = () => {
   return {
-    createProperty: async (req: Request, res: Response) => {
+    createLodge: async (req: Request, res: Response) => {
       try {
         const ownerId = (req.user as User as User)!.id; // Assuming authenticated user is available
         const {
@@ -23,9 +23,9 @@ const createPropertyController = () => {
           deposit,
           university,
           images,
-        } = req.body as Property;
+        } = req.body as Lodge;
 
-        const property = await propertyService.createProperty({
+        const lodge = await lodgeService.createLodge({
           id,
           amenities,
           availableFrom,
@@ -42,7 +42,7 @@ const createPropertyController = () => {
           type,
           university,
         });
-        res.status(201).json(property);
+        res.status(201).json(lodge);
       } catch (err) {
         if (err instanceof CustomError)
           res.status(err.statusCode).json({ error: err.message });
@@ -51,7 +51,7 @@ const createPropertyController = () => {
 
     listProperties: async (req: Request, res: Response) => {
       try {
-        const properties = await propertyService.listProperties();
+        const properties = await lodgeService.listLodge();
 
         res.status(200).json({ properties });
       } catch (error) {
@@ -59,18 +59,16 @@ const createPropertyController = () => {
       }
     },
 
-    getPropertyById: async (req: Request, res: Response) => {
-      const propertyId = req.params.id;
+    getLodgeById: async (req: Request, res: Response) => {
+      const lodgeId = req.params.id;
       try {
-        const property = await propertyService.getPropertyById(propertyId);
-        res.status(200).json({ property });
+        const lodge = await lodgeService.getLodgeById(lodgeId);
+        res.status(200).json({ lodge });
       } catch (error) {
         if (error instanceof CustomError) {
           res.status(error.statusCode).json({ error: error.message });
         } else {
-          res
-            .status(400)
-            .json({ error: `Error fetching property ${propertyId}` });
+          res.status(400).json({ error: `Error fetching lodge ${lodgeId}` });
         }
       }
     },
@@ -78,7 +76,7 @@ const createPropertyController = () => {
     getPropertiesByUniversity: async (req: Request, res: Response) => {
       try {
         const universityId = req.params.universityId;
-        const properties = await propertyService.getPropertiesByUniversity(
+        const properties = await lodgeService.getPropertiesByUniversity(
           universityId
         );
         res.status(200).json(universityId);
@@ -87,17 +85,17 @@ const createPropertyController = () => {
       }
     },
 
-    updateProperty: async (req: Request, res: Response) => {
+    updateLodge: async (req: Request, res: Response) => {
       try {
-        const propertyId = req.params.id;
+        const lodgeId = req.params.id;
         const ownerId = (req.user as User)!.id;
-        const property = req.body;
-        const updatedProperty = await propertyService.UpdateProperty(
-          property,
+        const lodge = req.body;
+        const updatedLodge = await lodgeService.updateLodge(
+          lodge,
           ownerId,
-          propertyId
+          lodgeId
         );
-        res.status(200).json({ property: updatedProperty });
+        res.status(200).json({ lodge: updatedLodge });
       } catch (error) {
         if (
           error instanceof NotFoundError ||
@@ -105,20 +103,17 @@ const createPropertyController = () => {
         ) {
           res.status(error.statusCode).json({ error: error.message });
         } else {
-          res.status(400).json({ error: "error updating property" });
+          res.status(400).json({ error: "error updating lodge" });
         }
       }
     },
 
-    deleteProperty: async (req: Request, res: Response) => {
+    deleteLodge: async (req: Request, res: Response) => {
       try {
-        const propertyId = req.params.id;
+        const lodgeId = req.params.id;
         const ownerId = (req.user as User)!.id;
-        const deletedProperty = await propertyService.deleteProperty(
-          propertyId,
-          ownerId
-        );
-        res.status(200).json({ deletedProperty });
+        const deletedLodge = await lodgeService.deleteLodge(lodgeId, ownerId);
+        res.status(200).json({ deletedLodge });
       } catch (error) {
         if (
           error instanceof NotFoundError ||
@@ -126,11 +121,11 @@ const createPropertyController = () => {
         ) {
           res.status(error.statusCode).json({ error: error.message });
         } else {
-          res.status(400).json({ error: "Error deleting property" });
+          res.status(400).json({ error: "Error deleting lodge" });
         }
       }
     },
   };
 };
 
-export const propertyController = createPropertyController();
+export const lodgeController = createLodgeController();

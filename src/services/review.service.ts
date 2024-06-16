@@ -4,15 +4,15 @@ import { NotFoundError, UnauthorizedError } from "../utils/";
 
 const createReviewService = () => {
   const createReview = async (
-    propertyId: string,
+    lodgeId: string,
     authorId: string,
     rating: number,
     comment: string
   ): Promise<Review> => {
-    const property = await prisma.property.findUnique({
-      where: { id: propertyId },
+    const Lodge = await prisma.lodge.findUnique({
+      where: { id: lodgeId },
     });
-    if (!property) {
+    if (!Lodge) {
       throw new NotFoundError("Property not found");
     }
     const author = await prisma.user.findUnique({
@@ -23,7 +23,7 @@ const createReviewService = () => {
     }
     const newReview = await prisma.review.create({
       data: {
-        property: { connect: { id: propertyId } },
+        Lodge: { connect: { id: lodgeId } },
         author: { connect: { id: authorId } },
         rating,
         comment,
@@ -35,7 +35,7 @@ const createReviewService = () => {
   const getReviews = async (): Promise<Review[]> => {
     const reviews = await prisma.review.findMany({
       include: {
-        property: true,
+        Lodge: true,
         author: {
           select: {
             id: true,
@@ -52,7 +52,7 @@ const createReviewService = () => {
     const review = await prisma.review.findUnique({
       where: { id: reviewId },
       include: {
-        property: true,
+        Lodge: true,
         author: {
           select: {
             id: true,
@@ -68,13 +68,11 @@ const createReviewService = () => {
     return review;
   };
 
-  const getReviewsByProperty = async (
-    propertyId: string
-  ): Promise<Review[]> => {
+  const getReviewsByProperty = async (lodgeId: string): Promise<Review[]> => {
     const reviews = await prisma.review.findMany({
-      where: { propertyId: propertyId },
+      where: { LodgeId: lodgeId },
       include: {
-        property: true,
+        Lodge: true,
         author: {
           select: {
             id: true,

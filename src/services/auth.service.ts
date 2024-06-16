@@ -37,7 +37,7 @@ const createAuthService = () => {
           email,
           password: hashedPassword,
           firstName,
-          roles: [UserRole.PROPERTY_OWNER],
+          roles: [UserRole.Lodge_OWNER],
           lastName,
           university: university,
           verified: false,

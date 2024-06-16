@@ -27,7 +27,7 @@ export const isPropertyOwner = (
   const { roles, id } = req.user as User;
   const propertyOwnerId = req.params.ownerId;
 
-  if (!roles.includes(UserRole.PROPERTY_OWNER) || id !== propertyOwnerId) {
+  if (!roles.includes(UserRole.Lodge_OWNER) || id !== propertyOwnerId) {
     return next(
       new UnauthorizedError("You are not authorized to perform this action")
     );

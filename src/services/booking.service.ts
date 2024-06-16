@@ -6,26 +6,26 @@ const createBookingService = () => {
   /**
    * Create a new booking.
    * @param tenantId - The ID of the tenant making the booking.
-   * @param propertyId - The ID of the property to book.
+   * @param LodgeId - The ID of the Lodge to book.
    * @param checkInDate - The check-in date for the booking.
    * @param checkOutDate - The check-out date for the booking.
    * @returns The new booking.
-   * @throws BadRequestError if the check-in date is after the check-out date, or if the property is not available for the requested dates.
-   * @throws NotFoundError if the tenant or property is not found.
+   * @throws BadRequestError if the check-in date is after the check-out date, or if the Lodge is not available for the requested dates.
+   * @throws NotFoundError if the tenant or Lodge is not found.
    */
   const createBooking = async (
     tenantId: string,
-    propertyId: string,
+    LodgeId: string,
     checkInDate: Date,
     checkOutDate: Date
   ): Promise<Booking> => {
     const tenant = await prisma.user.findUnique({ where: { id: tenantId } });
-    const property = await prisma.property.findUnique({
-      where: { id: propertyId },
+    const Lodge = await prisma.lodge.findUnique({
+      where: { id: LodgeId },
     });
 
-    if (!tenant || !property) {
-      throw new NotFoundError("Tenant or property not found");
+    if (!tenant || !Lodge) {
+      throw new NotFoundError("Tenant or Lodge not found");
     }
 
     if (checkInDate >= checkOutDate) {
@@ -34,7 +34,7 @@ const createBookingService = () => {
 
     const existingBookings = await prisma.booking.findMany({
       where: {
-        propertyId,
+        LodgeId,
         OR: [
           {
             checkInDate: {
@@ -61,7 +61,7 @@ const createBookingService = () => {
     return prisma.booking.create({
       data: {
         tenant: { connect: { id: tenantId } },
-        property: { connect: { id: propertyId } },
+        Lodge: { connect: { id: LodgeId } },
         checkInDate,
         checkOutDate,
         status: BookingStatus.PENDING,
@@ -72,16 +72,14 @@ const createBookingService = () => {
   };
 
   /**
-   * Retrieves all bookings for a given property.
-   * @param propertyId - The ID of the property.
-   * @returns An array of booking objects for the property.
+   * Retrieves all bookings for a given Lodge.
+   * @param LodgeId - The ID of the Lodge.
+   * @returns An array of booking objects for the Lodge.
    */
-  const getBookingsByProperty = async (
-    propertyId: string
-  ): Promise<Booking[]> => {
+  const getBookingsByProperty = async (LodgeId: string): Promise<Booking[]> => {
     return prisma.booking.findMany({
       where: {
-        propertyId,
+        LodgeId,
       },
       include: {
         tenant: true,
@@ -98,7 +96,7 @@ const createBookingService = () => {
     const bookings = await prisma.booking.findMany({
       where: { tenantId: tenantId },
       include: {
-        property: true,
+        Lodge: true,
       },
     });
 
@@ -118,7 +116,7 @@ const createBookingService = () => {
   ): Promise<Booking | null> => {
     return prisma.booking.findFirst({
       where: { id: bookingId, tenantId },
-      include: { property: true },
+      include: { Lodge: true },
     });
   };
 
@@ -129,7 +127,7 @@ const createBookingService = () => {
    * @param updates - The updates to apply to the booking.
    * @returns The updated booking.
    * @throws NotFoundError if the tenant or booking is not found.
-   * @throws BadRequestError if the check-in date is after the check-out date, or if the property is not available for the requested dates.
+   * @throws BadRequestError if the check-in date is after the check-out date, or if the Lodge is not available for the requested dates.
    */
   const updateBookingByTenant = async (
     tenantId: string,
@@ -153,7 +151,7 @@ const createBookingService = () => {
 
       const existingBookings = await prisma.booking.findMany({
         where: {
-          propertyId: booking.propertyId,
+          LodgeId: booking.LodgeId,
           id: { not: bookingId },
           OR: [
             {

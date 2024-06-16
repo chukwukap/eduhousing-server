@@ -8,7 +8,7 @@ import rateLimit from "express-rate-limit";
 import {
   authRoutes,
   bookingRoutes,
-  propertyRoutes,
+  lodgeRoutes,
   reviewRoutes,
   userRoutes,
 } from "./routes/";
@@ -36,7 +36,7 @@ app.use(rateLimiter);
 // Routes
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/users", userRoutes);
-app.use("/api/v1/properties", propertyRoutes);
+app.use("/api/v1/lodges", lodgeRoutes);
 app.use("/api/v1/universities", universityRoutes);
 app.use("/api/v1/reviews", reviewRoutes);
 app.use("/api/v1/bookings", bookingRoutes);
