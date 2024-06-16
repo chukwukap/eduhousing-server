@@ -65,12 +65,12 @@ const createAuthService = () => {
         throw new AuthenticationError("Invalid email or password.");
       }
 
-      // If the user is not verified, throw an error
-      if (!user.verified) {
-        throw new AuthenticationError(
-          "Please verify your email address before logging in."
-        );
-      }
+      // // If the user is not verified, throw an error
+      // if (!user.verified) {
+      //   throw new AuthenticationError(
+      //     "Please verify your email address before logging in."
+      //   );
+      // }
       const accessToken = generateToken({ userId: user.id }, "1h");
 
       return accessToken;
