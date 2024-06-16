@@ -33,7 +33,7 @@ const createAuthController = () => {
         // Check if the user already exists
         const existingUser = await userService.getUserByEmail(email);
         if (existingUser) {
-          return res.status(201).json({
+          return res.status(400).json({
             message: `user with email: ${email} already existss`,
           });
         }
