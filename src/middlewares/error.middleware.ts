@@ -1,4 +1,3 @@
-// src/middlewares/error.middleware.ts
 import { Request, Response } from "express";
 import { CustomError } from "../utils/";
 

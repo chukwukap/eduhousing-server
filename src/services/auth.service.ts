@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import prisma from "../config/database";
-import { AuthenticationError, ValidationError } from "../utils/";
+import { AuthenticationError, ValidationError, generateToken } from "../utils/";
 import { User, UserRole } from "@prisma/client";
 import { verifyToken } from "../utils/";
 
@@ -53,8 +53,7 @@ const createAuthService = () => {
      * @param password - The user's password.
      * @returns The authenticated user object.
      */
-    async loginUser(email: string, password: string): Promise<User> {
-      // Find the user by email
+    async loginUser(email: string, password: string): Promise<string> {
       const user = await prisma.user.findUnique({ where: { email } });
       if (!user) {
         throw new AuthenticationError("Invalid email or password.");
@@ -72,8 +71,9 @@ const createAuthService = () => {
           "Please verify your email address before logging in."
         );
       }
+      const accessToken = generateToken({ userId: user.id }, "1h");
 
-      return user;
+      return accessToken;
     },
 
     /**

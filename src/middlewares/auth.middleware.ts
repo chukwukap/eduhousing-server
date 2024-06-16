@@ -3,19 +3,32 @@ import jwt from "jsonwebtoken";
 import { UnauthorizedError } from "../utils/";
 import { User, UserRole } from "@prisma/client";
 
-export const authenticate = (req: Request, _: Response, next: NextFunction) => {
-  const token = req.headers.authorization?.split(" ")[1];
+export const authenticate = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
 
-  if (!token) {
-    return next(new UnauthorizedError("Authentication token is missing"));
-  }
+  if (!token) return res.sendStatus(401);
+
+  // if (!token) {
+  //   return next(new UnauthorizedError("Authentication token is missing"));
+  // }
+
+  // jwt.verify(token, process.env.JWT_SECRET as string, (err: any, user: any) => {
+  //   if (err) return res.sendStatus(403);
+  //   req.user = user;
+  //   return next();
+  // });
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET!);
     req.user = decoded as User;
-    next();
+    return next();
   } catch (err) {
-    next(new UnauthorizedError("Invalid authentication token"));
+    return next(new UnauthorizedError("Invalid authentication token"));
   }
 };
 
@@ -47,3 +60,24 @@ export const isAdmin = (req: Request, _: Response, next: NextFunction) => {
 
   next();
 };
+
+// import app from "./app";
+// import prisma from "./config/prisma";
+
+// const PORT = process.env.PORT || 3000;
+
+// async function startServer() {
+//   try {
+//     await prisma.$connect();
+//     console.log("Connected to the database");
+
+//     app.listen(PORT, () => {
+//       console.log(`Server is running on port ${PORT}`);
+//     });
+//   } catch (error) {
+//     console.error("Failed to start the server:", error);
+//     process.exit(1);
+//   }
+// }
+
+// startServer();
