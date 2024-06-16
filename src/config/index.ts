@@ -10,10 +10,7 @@ dotenv.config({ path: path.join(__dirname, "../../.env") });
 export const config = {
   env: process.env.NODE_ENV || "development",
   app: {
-    port:
-      process.env.NODE_ENV === "development"
-        ? 3000
-        : parseInt(process.env.PORT!),
+    port: parseInt(process.env.PORT!),
     baseUrl: process.env.APP_BASE_URL || "http://localhost:3000",
   },
   database: {
